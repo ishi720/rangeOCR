@@ -15,6 +15,9 @@ var rect_sx = 0;
 var rect_sy = 0;
 var rect_ex = 0;
 var rect_ey = 0;
+
+var lang = 'jpn';
+
  
 window.onload = function () {
   
@@ -26,6 +29,11 @@ window.onload = function () {
   rec_canvas.width = rec_canvas.height = 1;   
     
   image = document.getElementById("img_source");       
+
+  document.getElementById('selectLang').onchange = function(){
+    lang = this.value;
+  };
+
 }
  
 // 色の反転
@@ -180,11 +188,17 @@ function onAddFile(event) {
     document.getElementById("inputfile").value = '';
   } 
 }
+
+
+
+
+
 function Ocr(){
   var buf = document.querySelector('#RecCanvas');
   Tesseract.recognize(
       buf,
-      'jpn',
+      //'jpn',
+      lang,
       { 
           logger: function(m) {
               document.querySelector('#progress').textContent = m.status;
