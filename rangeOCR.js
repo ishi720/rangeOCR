@@ -36,18 +36,6 @@ window.onload = function () {
 
 }
  
-// 色の反転
-function getTurningAround(color) {
- 
- // 灰色は白にする 
- if(color >= 88 && color <= 168){
-   return 255;
- // 色を反転する  
- }else{
-   return 255 - color;
- }
-}
- 
 function OnMousedown(event) {
  
   rect_MousedownFlg = true;
@@ -58,10 +46,7 @@ function OnMousedown(event) {
   rect_sy = rect_ey = event.clientY - rect.top; 
   
   // 矩形の枠色を反転させる  
-  var imagedata = src_ctx.getImageData(rect_sx, rect_sy, 1, 1);   
-  // src_ctx.strokeStyle = 'rgb(' + getTurningAround(imagedata.data[0]) +
-  //                          ',' + getTurningAround(imagedata.data[1]) + 
-  //                          ',' + getTurningAround(imagedata.data[2]) + ')';  
+  var imagedata = src_ctx.getImageData(rect_sx, rect_sy, 1, 1);
   src_ctx.strokeStyle = "red";
 
   // 線の太さ                         
@@ -197,7 +182,6 @@ function Ocr(){
   var buf = document.querySelector('#RecCanvas');
   Tesseract.recognize(
       buf,
-      //'jpn',
       lang,
       { 
           logger: function(m) {
@@ -206,6 +190,6 @@ function Ocr(){
       }
   )
   .then(function(result){
-      document.querySelector('#result').textContent = result.data.text;
+      document.querySelector('#result').textContent = result.data.text.replace(/\s/g, "");
   });
 }
