@@ -11,33 +11,48 @@ var MIN_WIDTH  = 3;
 var MIN_HEIGHT = 3;
  
 var rect_MousedownFlg = false;
-var rect_sx = 0;
-var rect_sy = 0;
-var rect_ex = 0;
-var rect_ey = 0;
+var rectObj = [{
+  sx: 0,
+  sy: 0,
+  ex: 0,
+  ey: 0
+},{
+  sx: 0,
+  sy: 0,
+  ex: 0,
+  ey: 0
+},{
+  sx: 0,
+  sy: 0,
+  ex: 0,
+  ey: 0
+}];
+
 var lang = 'jpn';
 
 
-var rect_num = 1;
+var rect_num = 0;
 
-
-var rect_sx2 = 0;
-var rect_sy2 = 0;
-var rect_ex2 = 0;
-var rect_ey2 = 0;
 
 window.onload = function () {
   
   src_canvas = document.getElementById("SrcCanvas");
   src_ctx = src_canvas.getContext("2d");    
   
-  rec_canvas = document.getElementById("RecCanvas");
-  rec_ctx = rec_canvas.getContext("2d");
-  rec_canvas.width = rec_canvas.height = 1;   
-    
-  rec_canvas2 = document.getElementById("RecCanvas2");
-  rec_ctx2 = rec_canvas2.getContext("2d");
-  rec_canvas2.width = rec_canvas2.height = 1;   
+  recObj = [{
+    canvas: document.getElementById("RecCanvas"),
+    ctx: document.getElementById("RecCanvas").getContext("2d")
+  },{
+    canvas: document.getElementById("RecCanvas2"),
+    ctx: document.getElementById("RecCanvas2").getContext("2d")
+  },{
+    canvas: document.getElementById("RecCanvas3"),
+    ctx: document.getElementById("RecCanvas3").getContext("2d")
+  }];
+
+  for (var i=0; i<rectObj.length; i++) {
+    recObj[i].canvas.width = recObj[i].canvas.height = 1;
+  }
 
   image = document.getElementById("img_source");       
 
@@ -57,48 +72,30 @@ function OnMousedown(event) {
  
   rect_MousedownFlg = true;
   
-  if (rect_num===1) {
-    // 座標を求める
-    var rect = event.target.getBoundingClientRect();
-    rect_sx = rect_ex = event.clientX - rect.left;
-    rect_sy = rect_ey = event.clientY - rect.top; 
-    
-    // 矩形の枠色を反転させる  
-    var imagedata = src_ctx.getImageData(rect_sx, rect_sy, 1, 1);
-    src_ctx.strokeStyle = "red";
 
-    // 線の太さ                         
-    src_ctx.lineWidth = 3; 
+  var rect = event.target.getBoundingClientRect();
+  rectObj[rect_num].sx = rectObj[rect_num].ex = event.clientX - rect.left;
+  rectObj[rect_num].sy = rectObj[rect_num].ey = event.clientY - rect.top; 
     
-    // 矩形の枠線を点線にする
-    src_ctx.setLineDash([2, 3]);                             
-  } else {
-    // 座標を求める
-    var rect = event.target.getBoundingClientRect();
-    rect_sx2 = rect_ex2 = event.clientX - rect.left;
-    rect_sy2 = rect_ey2 = event.clientY - rect.top; 
-    
-    // 矩形の枠色を反転させる  
-    var imagedata = src_ctx.getImageData(rect_sx2, rect_sy2, 1, 1);
-    src_ctx.strokeStyle = "blue";
+  // 矩形の枠色を反転させる  
+  var imagedata = src_ctx.getImageData(rectObj[rect_num].sx, rectObj[rect_num].sy, 1, 1);
+  src_ctx.strokeStyle = "red";
 
-    // 線の太さ0           
-    src_ctx.lineWidth = 3; 
+  // 線の太さ
+  src_ctx.lineWidth = 3;
     
-    // 矩形の枠線を点線にする
-    src_ctx.setLineDash([2, 3]);
-  }
+  // 矩形の枠線を点線にする
+  src_ctx.setLineDash([2, 3]);
 }
  
 function OnMousemove(event) {
   
   if(rect_MousedownFlg){
     
-    if (rect_num === 1) {
       // 座標を求める
       var rect = event.target.getBoundingClientRect();
-      rect_ex = event.clientX - rect.left;
-      rect_ey = event.clientY - rect.top; 
+      rectObj[rect_num].ex = event.clientX - rect.left;
+      rectObj[rect_num].ey = event.clientY - rect.top; 
 
       // 元画像の再描画
       src_ctx.drawImage(image,0,0);  
@@ -106,162 +103,64 @@ function OnMousemove(event) {
       // 矩形の描画
       src_ctx.beginPath();
 
-      // 上
-      src_ctx.moveTo(rect_sx,rect_sy);
-      src_ctx.lineTo(rect_ex,rect_sy);
+     for(var i=0; i<=rectObj.length; i++){
+        // 上
+        src_ctx.moveTo(rectObj[i].sx,rectObj[i].sy);
+        src_ctx.lineTo(rectObj[i].ex,rectObj[i].sy);
 
-      // 下
-      src_ctx.moveTo(rect_sx,rect_ey);
-      src_ctx.lineTo(rect_ex,rect_ey);
+        // 下
+        src_ctx.moveTo(rectObj[i].sx,rectObj[i].ey);
+        src_ctx.lineTo(rectObj[i].ex,rectObj[i].ey);
 
-      // 右
-      src_ctx.moveTo(rect_ex,rect_sy);
-      src_ctx.lineTo(rect_ex,rect_ey);
+        // 右
+        src_ctx.moveTo(rectObj[i].ex,rectObj[i].sy);
+        src_ctx.lineTo(rectObj[i].ex,rectObj[i].ey);
 
-      // 左
-      src_ctx.moveTo(rect_sx,rect_sy);
-      src_ctx.lineTo(rect_sx,rect_ey);
+        // 左
+        src_ctx.moveTo(rectObj[i].sx,rectObj[i].sy);
+        src_ctx.lineTo(rectObj[i].sx,rectObj[i].ey);
 
-      src_ctx.stroke();
+        src_ctx.stroke();
 
-      // 上
-      src_ctx.moveTo(rect_sx2,rect_sy2);
-      src_ctx.lineTo(rect_ex2,rect_sy2);
-
-      // 下
-      src_ctx.moveTo(rect_sx2,rect_ey2);
-      src_ctx.lineTo(rect_ex2,rect_ey2);
-
-      // 右
-      src_ctx.moveTo(rect_ex2,rect_sy2);
-      src_ctx.lineTo(rect_ex2,rect_ey2);
-
-      // 左
-      src_ctx.moveTo(rect_sx2,rect_sy2);
-      src_ctx.lineTo(rect_sx2,rect_ey2);
-
-      src_ctx.stroke()
-    } else {
-      // 座標を求める
-      var rect = event.target.getBoundingClientRect();
-      rect_ex2 = event.clientX - rect.left;
-      rect_ey2 = event.clientY - rect.top; 
-
-      // 元画像の再描画
-      src_ctx.drawImage(image,0,0);  
-      
-      // 矩形の描画
-      src_ctx.beginPath();
-
-      // 上
-      src_ctx.moveTo(rect_sx,rect_sy);
-      src_ctx.lineTo(rect_ex,rect_sy);
-
-      // 下
-      src_ctx.moveTo(rect_sx,rect_ey);
-      src_ctx.lineTo(rect_ex,rect_ey);
-
-      // 右
-      src_ctx.moveTo(rect_ex,rect_sy);
-      src_ctx.lineTo(rect_ex,rect_ey);
-
-      // 左
-      src_ctx.moveTo(rect_sx,rect_sy);
-      src_ctx.lineTo(rect_sx,rect_ey);
-
-      src_ctx.stroke();
-
-
-      src_ctx.strokeStyle = "blue";
-      // 上
-      src_ctx.moveTo(rect_sx2,rect_sy2);
-      src_ctx.lineTo(rect_ex2,rect_sy2);
-
-      // 下
-      src_ctx.moveTo(rect_sx2,rect_ey2);
-      src_ctx.lineTo(rect_ex2,rect_ey2);
-
-      // 右
-      src_ctx.moveTo(rect_ex2,rect_sy2);
-      src_ctx.lineTo(rect_ex2,rect_ey2);
-
-      // 左
-      src_ctx.moveTo(rect_sx2,rect_sy2);
-      src_ctx.lineTo(rect_sx2,rect_ey2);
-
-      src_ctx.stroke()
-    }
+      }
   }
 }
  
 function OnMouseup(event) {
-  
 
-  if (rect_num===1) {
     // キャンバスの範囲外は無効にする    
-    if(rect_sx === rect_ex && rect_sy === rect_ey){
+    if(rectObj[rect_num].sx === rectObj[rect_num].ex && rectObj[rect_num].sy === rectObj[rect_num].ey){
       // 初期化
       src_ctx.drawImage(image,0,0); 
-      rect_sx = rect_ex = 0;
-      rect_sy = rect_ey = 0;   
-      rec_canvas.width = rec_canvas.height = 1; 
+      rectObj[rect_num].sx = rectObj[rect_num].ex = 0;
+      rectObj[rect_num].sy = rectObj[rect_num].ey = 0;
+
+      recObj[rect_num].canvas.width = recObj[rect_num].canvas.height = 1; 
     }
     
     // 矩形の画像を取得する
     if(rect_MousedownFlg){
       
       // 矩形のサイズ
-      rec_canvas.width  = Math.abs(rect_sx - rect_ex);
-      rec_canvas.height = Math.abs(rect_sy - rect_ey);
+      recObj[rect_num].canvas.width  = Math.abs(rectObj[rect_num].sx - rectObj[rect_num].ex);
+      recObj[rect_num].canvas.height = Math.abs(rectObj[rect_num].sy - rectObj[rect_num].ey);
       
-      // 指定のサイズ以下は無効にする[3x3]
-      if(!(rec_canvas.width >= MIN_WIDTH && rec_canvas.height >= MIN_HEIGHT)){
+    //   // 指定のサイズ以下は無効にする[3x3]
+    if(!(recObj[rect_num].canvas.width >= MIN_WIDTH && recObj[rect_num].canvas.height >= MIN_HEIGHT)){
         // 初期化
         src_ctx.drawImage(image,0,0); 
-        rect_sx = rect_ex = 0;
-        rect_sy = rect_ey = 0; 
-        rec_canvas.width = rec_canvas.height = 1;
-      }else{
+        rectObj[rect_num].sx = rectObj[rect_num].ex = 0;
+        rectObj[rect_num].sy = rectObj[rect_num].ey = 0; 
+        recObj[rect_num].canvas.width = recObj[rect_num].canvas.height = 1;
+    }else{
         // 矩形用キャンバスへ画像の転送
-        rec_ctx.drawImage(image,
-                          Math.min(rect_sx,rect_ex),Math.min(rect_sy,rect_ey),  
-                          Math.max(rect_sx - rect_ex,rect_ex - rect_sx),Math.max(rect_sy - rect_ey ,rect_ey - rect_sy),
-                          0,0,rec_canvas.width,rec_canvas.height);  
+        recObj[rect_num].ctx.drawImage(image,
+                          Math.min(rectObj[rect_num].sx,rectObj[rect_num].ex),Math.min(rectObj[rect_num].sy,rectObj[rect_num].ey),  
+                          Math.max(rectObj[rect_num].sx - rectObj[rect_num].ex,rectObj[rect_num].ex - rectObj[rect_num].sx),Math.max(rectObj[rect_num].sy - rectObj[rect_num].ey ,rectObj[rect_num].ey - rectObj[rect_num].sy),
+                          0,0,recObj[rect_num].canvas.width,recObj[rect_num].canvas.height);  
       }
     }
-  } else {
-    // キャンバスの範囲外は無効にする    
-    if(rect_sx2 === rect_ex2 && rect_sy2 === rect_ey2){
-      // 初期化
-      src_ctx.drawImage(image,0,0); 
-      rect_sx2 = rect_ex2 = 0;
-      rect_sy2 = rect_ey2 = 0;   
-      rec_canvas2.width = rec_canvas2.height = 1; 
-    }
-    
-    // 矩形の画像を取得する
-    if(rect_MousedownFlg){
-      
-      // 矩形のサイズ
-      rec_canvas2.width  = Math.abs(rect_sx2 - rect_ex2);
-      rec_canvas2.height = Math.abs(rect_sy2 - rect_ey2);
-      
-      // 指定のサイズ以下は無効にする[3x3]
-      if(!(rec_canvas2.width >= MIN_WIDTH && rec_canvas2.height >= MIN_HEIGHT)){
-        // 初期化
-        src_ctx.drawImage(image,0,0); 
-        rect_sx2 = rect_ex2 = 0;
-        rect_sy2 = rect_ey2 = 0; 
-        rec_canvas2.width = rec_canvas2.height = 1;
-      }else{
-        // 矩形用キャンバスへ画像の転送
-        rec_ctx2.drawImage(image,
-                          Math.min(rect_sx2,rect_ex2),Math.min(rect_sy2,rect_ey2),  
-                          Math.max(rect_sx2 - rect_ex2,rect_ex2 - rect_sx2),Math.max(rect_sy2 - rect_ey2 ,rect_ey2 - rect_sy2),
-                          0,0,rec_canvas2.width,rec_canvas2.height);  
-      }
-    } 
-  }
+
   rect_MousedownFlg = false;
 }
   

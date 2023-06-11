@@ -19,13 +19,17 @@
     <input type="file" id="inputfile" accept="image/jpeg,image/png,image/gif,image/bmp,image/x-icon" onchange="onAddFile(event);">
 
 
-    <input type="radio" name="q1" value="1" checked> 1
+    <input type="radio" name="q1" value="0" checked> 0
+	<input type="radio" name="q1" value="1"> 1
 	<input type="radio" name="q1" value="2"> 2
 
 	<img id="img_source" style="display:none;">
 	<canvas id="SrcCanvas" onmousedown="OnMousedown(event);" onmousemove="OnMousemove(event);" onmouseup="OnMouseup(event);"></canvas>
+
 	<canvas id="RecCanvas"></canvas>
 	<canvas id="RecCanvas2"></canvas>
+	<canvas id="RecCanvas3"></canvas>
+
 	<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="Ocr()">文字起こし</button>
 	
     <select name="lang" id="selectLang">
