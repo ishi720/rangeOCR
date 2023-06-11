@@ -6,6 +6,8 @@
 
 	<script src="./rangeOCR.js"></script>
 	<script src="./node_modules/tesseract.js/dist/tesseract.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js"></script>
 	<link href="./dist/output.css" rel="stylesheet">
 	<title>rengeOCR</title>
 </head>
@@ -16,7 +18,7 @@
         </h2>
     </nav>
     
-    <input type="file" id="inputfile" accept="image/jpeg,image/png,image/gif,image/bmp,image/x-icon" onchange="onAddFile(event);">
+    <input type="file" id="inputfile" accept="image/jpeg,image/png,image/gif,image/bmp,image/x-icon,.pdf" onchange="onAddFile(event);">
 
 
     <input type="radio" name="q1" value="0" checked> 0

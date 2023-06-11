@@ -183,31 +183,47 @@ function onAddFile(event) {
   } else { 
     files = event.dataTransfer.files;   
   }    
- 
-  // ファイルが読み込まれた
-  reader.onload = function (event) {
-    
-    // イメージが読み込まれた
-    image.onload = function (){
-      src_canvas.width  = image.width;
-      src_canvas.height = image.height;
-        
-      // キャンバスに画像を描画
-      src_ctx.drawImage(image,0,0); 
-    };      
-       
-    // イメージが読み込めない
-    image.onerror  = function (){
-      alert('このファイルは読み込めません。');  
+
+    console.log(event);
+    console.log(getExt(files[0].name));
+  if ( getExt(files[0].name) === 'pdf' ) {
+
+    reader.onload = function (event) {
+
+      var pdfData = new Uint8Array(event.target.result);
+      renderPDF(pdfData, src_canvas);
+
     };
- 
-    image.src = reader.result;       
-  };
-  
-  if (files[0]){    
-    reader.readAsDataURL(files[0]); 
-    document.getElementById("inputfile").value = '';
-  } 
+    reader.readAsArrayBuffer(files[0]);
+
+  } else {
+    // ファイルが読み込まれた
+    reader.onload = function (event) {
+      
+      // イメージが読み込まれた
+      image.onload = function (){
+        src_canvas.width  = image.width;
+        src_canvas.height = image.height;
+          
+        // キャンバスに画像を描画
+        src_ctx.drawImage(image,0,0); 
+      };      
+         
+      // イメージが読み込めない
+      image.onerror  = function (){
+        alert('このファイルは読み込めません。');  
+      };
+   
+      image.src = reader.result;       
+    };
+    
+    if (files[0]){    
+      reader.readAsDataURL(files[0]); 
+      document.getElementById("inputfile").value = '';
+    } 
+  }
+
+
 }
 
 function Ocr(){
@@ -224,4 +240,33 @@ function Ocr(){
   .then(function(result){
       document.querySelector('#result').textContent = result.data.text.replace(/\s/g, "");
   });
+}
+
+function renderPDF(data, canvas) {
+  // PDF.jsの読み込み
+  pdfjsLib.getDocument(data).promise.then(function(pdf) {
+    // 最初のページを取得
+    pdf.getPage(1).then(function(page) {
+      // ページのサイズを取得
+      var viewport = page.getViewport({ scale: 1 });
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      // ページを描画
+      //var context = canvas.getContext('2d');
+      var renderContext = {
+        canvasContext: src_ctx,
+        viewport: viewport
+      };
+
+      page.render(renderContext);
+    });
+  });
+}
+
+//ファイル名から拡張子を取得する関数
+function getExt(filename) {
+  var pos = filename.lastIndexOf('.');
+  if (pos === -1) return '';
+  return filename.slice(pos + 1);
 }
