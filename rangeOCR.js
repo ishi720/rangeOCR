@@ -26,11 +26,6 @@ var rect_sy2 = 0;
 var rect_ex2 = 0;
 var rect_ey2 = 0;
 
-
-
-
-
- 
 window.onload = function () {
   
   src_canvas = document.getElementById("SrcCanvas");
@@ -51,14 +46,11 @@ window.onload = function () {
   };
 
   var radio_btns = document.querySelectorAll(`input[type='radio'][name='q1']`);
-
-  for (var target of radio_btns) {
-    target.addEventListener(`change`, () => {
-      rect_num = target.value;
+  radio_btns.forEach( (r) => {
+    r.addEventListener("change", (e) => {
+        rect_num = Number(e.target.value);
     });
-  }
-
-
+  });
 }
  
 function OnMousedown(event) {
@@ -318,10 +310,6 @@ function onAddFile(event) {
     document.getElementById("inputfile").value = '';
   } 
 }
-
-
-
-
 
 function Ocr(){
   var buf = document.querySelector('#RecCanvas');
