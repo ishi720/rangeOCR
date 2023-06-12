@@ -189,10 +189,8 @@ function onAddFile(event) {
   if ( getExt(files[0].name) === 'pdf' ) {
 
     reader.onload = function (event) {
-
       var pdfData = new Uint8Array(event.target.result);
       renderPDF(pdfData, src_canvas);
-
     };
     reader.readAsArrayBuffer(files[0]);
 
@@ -253,13 +251,16 @@ function renderPDF(data, canvas) {
       canvas.height = viewport.height;
 
       // ページを描画
-      //var context = canvas.getContext('2d');
       var renderContext = {
         canvasContext: src_ctx,
         viewport: viewport
       };
-
-      page.render(renderContext);
+      page.render(renderContext).promise.then(function() {
+          // Canvasを画像に変換
+          var imageDataURL = canvas.toDataURL('image/png');
+          console.log(imageDataURL); // Base64データを表示
+          image.src = imageDataURL;
+      });
     });
   });
 }
