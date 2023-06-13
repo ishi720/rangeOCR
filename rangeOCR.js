@@ -103,7 +103,7 @@ function OnMousemove(event) {
       // 矩形の描画
       src_ctx.beginPath();
 
-     for(var i=0; i<=rectObj.length; i++){
+     for(var i=0; i<rectObj.length; i++){
         // 上
         src_ctx.moveTo(rectObj[i].sx,rectObj[i].sy);
         src_ctx.lineTo(rectObj[i].ex,rectObj[i].sy);
@@ -184,10 +184,7 @@ function onAddFile(event) {
     files = event.dataTransfer.files;   
   }    
 
-    console.log(event);
-    console.log(getExt(files[0].name));
   if ( getExt(files[0].name) === 'pdf' ) {
-
     reader.onload = function (event) {
       var pdfData = new Uint8Array(event.target.result);
       renderPDF(pdfData, src_canvas);
@@ -258,7 +255,6 @@ function renderPDF(data, canvas) {
       page.render(renderContext).promise.then(function() {
           // Canvasを画像に変換
           var imageDataURL = canvas.toDataURL('image/png');
-          console.log(imageDataURL); // Base64データを表示
           image.src = imageDataURL;
       });
     });
