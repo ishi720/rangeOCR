@@ -11,47 +11,47 @@ var MIN_WIDTH  = 3;
 var MIN_HEIGHT = 3;
  
 var rect_MousedownFlg = false;
-var rectObj = [{
-  sx: 0,
-  sy: 0,
-  ex: 0,
-  ey: 0
-},{
-  sx: 0,
-  sy: 0,
-  ex: 0,
-  ey: 0
-},{
-  sx: 0,
-  sy: 0,
-  ex: 0,
-  ey: 0
-}];
 
 var lang = 'jpn';
 
 
 var rect_num = 0;
-
+var rectObj = [];
 
 window.onload = function () {
   
   src_canvas = document.getElementById("SrcCanvas");
   src_ctx = src_canvas.getContext("2d");    
   
-  recObj = [{
-    canvas: document.getElementById("RecCanvas"),
-    ctx: document.getElementById("RecCanvas").getContext("2d")
-  },{
-    canvas: document.getElementById("RecCanvas2"),
-    ctx: document.getElementById("RecCanvas2").getContext("2d")
-  },{
-    canvas: document.getElementById("RecCanvas3"),
-    ctx: document.getElementById("RecCanvas3").getContext("2d")
-  }];
+  rectObj.push({
+    sx: 0,
+    sy: 0,
+    ex: 0,
+    ey: 0,
+    canvas: document.getElementById("RecCanvas_0"),
+    ctx: document.getElementById("RecCanvas_0").getContext("2d")
+  });
+
+  rectObj.push({
+    sx: 0,
+    sy: 0,
+    ex: 0,
+    ey: 0,
+    canvas: document.getElementById("RecCanvas_1"),
+    ctx: document.getElementById("RecCanvas_1").getContext("2d")
+  });
+
+  rectObj.push({
+    sx: 0,
+    sy: 0,
+    ex: 0,
+    ey: 0,
+    canvas: document.getElementById("RecCanvas_2"),
+    ctx: document.getElementById("RecCanvas_2").getContext("2d")
+  });
 
   for (var i=0; i<rectObj.length; i++) {
-    recObj[i].canvas.width = recObj[i].canvas.height = 1;
+    rectObj[i].canvas.width = rectObj[i].canvas.height = 1;
   }
 
   image = document.getElementById("img_source");       
@@ -135,29 +135,29 @@ function OnMouseup(event) {
       rectObj[rect_num].sx = rectObj[rect_num].ex = 0;
       rectObj[rect_num].sy = rectObj[rect_num].ey = 0;
 
-      recObj[rect_num].canvas.width = recObj[rect_num].canvas.height = 1; 
+      rectObj[rect_num].canvas.width = rectObj[rect_num].canvas.height = 1; 
     }
     
     // 矩形の画像を取得する
     if(rect_MousedownFlg){
       
       // 矩形のサイズ
-      recObj[rect_num].canvas.width  = Math.abs(rectObj[rect_num].sx - rectObj[rect_num].ex);
-      recObj[rect_num].canvas.height = Math.abs(rectObj[rect_num].sy - rectObj[rect_num].ey);
+      rectObj[rect_num].canvas.width  = Math.abs(rectObj[rect_num].sx - rectObj[rect_num].ex);
+      rectObj[rect_num].canvas.height = Math.abs(rectObj[rect_num].sy - rectObj[rect_num].ey);
       
     //   // 指定のサイズ以下は無効にする[3x3]
-    if(!(recObj[rect_num].canvas.width >= MIN_WIDTH && recObj[rect_num].canvas.height >= MIN_HEIGHT)){
+    if(!(rectObj[rect_num].canvas.width >= MIN_WIDTH && rectObj[rect_num].canvas.height >= MIN_HEIGHT)){
         // 初期化
         src_ctx.drawImage(image,0,0); 
         rectObj[rect_num].sx = rectObj[rect_num].ex = 0;
         rectObj[rect_num].sy = rectObj[rect_num].ey = 0; 
-        recObj[rect_num].canvas.width = recObj[rect_num].canvas.height = 1;
+        rectObj[rect_num].canvas.width = rectObj[rect_num].canvas.height = 1;
     }else{
         // 矩形用キャンバスへ画像の転送
-        recObj[rect_num].ctx.drawImage(image,
+        rectObj[rect_num].ctx.drawImage(image,
                           Math.min(rectObj[rect_num].sx,rectObj[rect_num].ex),Math.min(rectObj[rect_num].sy,rectObj[rect_num].ey),  
                           Math.max(rectObj[rect_num].sx - rectObj[rect_num].ex,rectObj[rect_num].ex - rectObj[rect_num].sx),Math.max(rectObj[rect_num].sy - rectObj[rect_num].ey ,rectObj[rect_num].ey - rectObj[rect_num].sy),
-                          0,0,recObj[rect_num].canvas.width,recObj[rect_num].canvas.height);  
+                          0,0,rectObj[rect_num].canvas.width,rectObj[rect_num].canvas.height);  
       }
     }
 
@@ -217,23 +217,29 @@ function onAddFile(event) {
       document.getElementById("inputfile").value = '';
     } 
   }
-
-
 }
 
-function Ocr(){
-  var buf = document.querySelector('#RecCanvas');
+
+function transcription() {
+    Ocr(0);
+    Ocr(1);
+    Ocr(2);
+}
+
+
+function Ocr(i){
+  var buf = document.querySelector('#RecCanvas_'+ i);
   Tesseract.recognize(
       buf,
       lang,
       { 
           logger: function(m) {
-              document.querySelector('#progress').textContent = m.status;
+              document.querySelector('#progress_'+ i).textContent = m.status;
           }
       }
   )
   .then(function(result){
-      document.querySelector('#result').textContent = result.data.text.replace(/\s/g, "");
+      document.querySelector('#result_'+ i).textContent = result.data.text.replace(/\s/g, "");
   });
 }
 

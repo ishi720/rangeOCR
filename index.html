@@ -28,18 +28,33 @@
 	<img id="img_source" style="display:none;">
 	<canvas id="SrcCanvas" onmousedown="OnMousedown(event);" onmousemove="OnMousemove(event);" onmouseup="OnMouseup(event);"></canvas>
 
-	<canvas id="RecCanvas"></canvas>
-	<canvas id="RecCanvas2"></canvas>
-	<canvas id="RecCanvas3"></canvas>
+	<canvas id="RecCanvas_0"></canvas>
+	<canvas id="RecCanvas_1"></canvas>
+	<canvas id="RecCanvas_2"></canvas>
 
-	<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="Ocr()">文字起こし</button>
+	<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="transcription()">文字起こし</button>
 	
-    <select name="lang" id="selectLang">
+    <select name="lang_0" id="selectLang">
 	  <option value="jpn">jpn</option>
 	  <option value="eng">eng</option>
 	</select>
-    <p id="progress"></p>
-    <p id="result"></p>
+    <p id="progress_0"></p>
+    <p id="result_0"></p>
+
+
+    <select name="lang_1" id="selectLang">
+	  <option value="jpn">jpn</option>
+	  <option value="eng">eng</option>
+	</select>
+    <p id="progress_1"></p>
+    <p id="result_1"></p>
+
+    <select name="lang_2" id="selectLang">
+	  <option value="jpn">jpn</option>
+	  <option value="eng">eng</option>
+	</select>
+    <p id="progress_2"></p>
+    <p id="result_2"></p>
 
 </body>
 </html>
