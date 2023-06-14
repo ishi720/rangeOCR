@@ -10,6 +10,7 @@
   "author": "ishi720",
   "license": "MIT",
   "dependencies": {
+    "pdfjs-dist": "3.x.x",
     "tailwindcss": "3.x.x",
     "tesseract.js": "4.x.x"
   }
