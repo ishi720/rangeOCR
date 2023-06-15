@@ -1,5 +1,4 @@
- 
-// キャンバス
+ // キャンバス
 var src_canvas; 
 var src_ctx;
  
@@ -30,49 +29,12 @@ window.onload = function () {
     lang: 'jpn'
   });
 
-  rectObj.push({
-    sx: 0,
-    sy: 0,
-    ex: 0,
-    ey: 0,
-    canvas: document.getElementById("RecCanvas_1"),
-    ctx: document.getElementById("RecCanvas_1").getContext("2d"),
-    lang: 'jpn'
-  });
-
-  rectObj.push({
-    sx: 0,
-    sy: 0,
-    ex: 0,
-    ey: 0,
-    canvas: document.getElementById("RecCanvas_2"),
-    ctx: document.getElementById("RecCanvas_2").getContext("2d"),
-    lang: 'jpn'
-  });
-
   for (var i=0; i<rectObj.length; i++) {
     rectObj[i].canvas.width = rectObj[i].canvas.height = 1;
   }
 
   image = document.getElementById("img_source");       
 
-  document.getElementById('selectLang_0').onchange = function(){
-    rectObj[0].lang = this.value;
-  };
-  document.getElementById('selectLang_1').onchange = function(){
-    rectObj[1].lang = this.value;
-  };
-  document.getElementById('selectLang_2').onchange = function(){
-    rectObj[2].lang = this.value;
-  };
-
-
-  var radio_btns = document.querySelectorAll(`input[type='radio'][name='q1']`);
-  radio_btns.forEach( (r) => {
-    r.addEventListener("change", (e) => {
-        rect_num = Number(e.target.value);
-    });
-  });
 }
  
 function OnMousedown(event) {
@@ -228,9 +190,10 @@ function onAddFile(event) {
 
 
 function transcription() {
-    Ocr(0);
-    Ocr(1);
-    Ocr(2);
+
+  for (var i = 0; i<rectObj.length; i++) {
+    Ocr(i);
+  }
 }
 
 
@@ -279,4 +242,66 @@ function getExt(filename) {
   var pos = filename.lastIndexOf('.');
   if (pos === -1) return '';
   return filename.slice(pos + 1);
+}
+
+
+function addRect(){
+
+  var n = rectObj.length;
+
+  const input = document.createElement("input");
+  input.setAttribute("type", "radio");
+  input.setAttribute("name", "q1");
+  input.setAttribute("value", n);
+  const label = document.createElement("label");
+  label.innerHTML = " "+ n + " ";
+  const div = document.getElementById("radioBtns");
+  div.appendChild(input);
+  div.appendChild(label);
+  var radio_btns = document.querySelectorAll(`input[type='radio'][name='q1']`);
+  radio_btns.forEach( (r) => {
+    r.addEventListener("change", (e) => {
+        rect_num = Number(e.target.value);
+    });
+  });
+
+  const div_RecCanvases = document.getElementById("RecCanvases");
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("id", "RecCanvas_"+ n);
+  div_RecCanvases.appendChild(canvas);
+
+  const div2 = document.getElementById("res");
+  const select = document.createElement("select");
+  select.setAttribute("name", "lang_" + n);
+  select.setAttribute("id", "selectLang_" + n);
+  const option1 = document.createElement("option");
+  option1.setAttribute("value", "jpn");
+  option1.textContent = "jpn";
+  select.appendChild(option1);
+  const option2 = document.createElement("option");
+  option2.setAttribute("value", "eng");
+  option2.textContent = "eng";
+  select.appendChild(option2);
+  div2.appendChild(select);
+
+  const p1 = document.createElement("p");
+  p1.setAttribute("id", "progress_" + n);
+  div2.appendChild(p1);
+  const p2 = document.createElement("p");
+  p2.setAttribute("id", "result_" + n);
+  div2.appendChild(p2);
+
+  document.getElementById('selectLang_'+ n).onchange = function(){
+    rectObj[n].lang = this.value;
+  };
+
+  rectObj.push({
+    sx: 0,
+    sy: 0,
+    ex: 0,
+    ey: 0,
+    canvas: document.getElementById("RecCanvas_"+ n),
+    ctx: document.getElementById("RecCanvas_"+ n).getContext("2d"),
+    lang: 'jpn'
+  });
 }
