@@ -12,9 +12,6 @@ var MIN_HEIGHT = 3;
  
 var rect_MousedownFlg = false;
 
-var lang = 'jpn';
-
-
 var rect_num = 0;
 var rectObj = [];
 
@@ -29,7 +26,8 @@ window.onload = function () {
     ex: 0,
     ey: 0,
     canvas: document.getElementById("RecCanvas_0"),
-    ctx: document.getElementById("RecCanvas_0").getContext("2d")
+    ctx: document.getElementById("RecCanvas_0").getContext("2d"),
+    lang: 'jpn'
   });
 
   rectObj.push({
@@ -38,7 +36,8 @@ window.onload = function () {
     ex: 0,
     ey: 0,
     canvas: document.getElementById("RecCanvas_1"),
-    ctx: document.getElementById("RecCanvas_1").getContext("2d")
+    ctx: document.getElementById("RecCanvas_1").getContext("2d"),
+    lang: 'jpn'
   });
 
   rectObj.push({
@@ -47,7 +46,8 @@ window.onload = function () {
     ex: 0,
     ey: 0,
     canvas: document.getElementById("RecCanvas_2"),
-    ctx: document.getElementById("RecCanvas_2").getContext("2d")
+    ctx: document.getElementById("RecCanvas_2").getContext("2d"),
+    lang: 'jpn'
   });
 
   for (var i=0; i<rectObj.length; i++) {
@@ -56,9 +56,16 @@ window.onload = function () {
 
   image = document.getElementById("img_source");       
 
-  document.getElementById('selectLang').onchange = function(){
-    lang = this.value;
+  document.getElementById('selectLang_0').onchange = function(){
+    rectObj[0].lang = this.value;
   };
+  document.getElementById('selectLang_1').onchange = function(){
+    rectObj[1].lang = this.value;
+  };
+  document.getElementById('selectLang_2').onchange = function(){
+    rectObj[2].lang = this.value;
+  };
+
 
   var radio_btns = document.querySelectorAll(`input[type='radio'][name='q1']`);
   radio_btns.forEach( (r) => {
@@ -231,7 +238,7 @@ function Ocr(i){
   var buf = document.querySelector('#RecCanvas_'+ i);
   Tesseract.recognize(
       buf,
-      lang,
+      rectObj[i].lang,
       { 
           logger: function(m) {
               document.querySelector('#progress_'+ i).textContent = m.status;
