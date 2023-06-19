@@ -13,6 +13,7 @@ var rect_MousedownFlg = false;
 
 var rect_num = 0;
 var rectObj = [];
+var count = 1;
 
 window.onload = function () {
   
@@ -247,17 +248,24 @@ function getExt(filename) {
 
 function addRect(){
 
-  var n = rectObj.length;
+  //var n = rectObj.length;
+  var n = count;
 
-  const input = document.createElement("input");
-  input.setAttribute("type", "radio");
-  input.setAttribute("name", "q1");
-  input.setAttribute("value", n);
-  const label = document.createElement("label");
+  var result_area = document.getElementById("result_area");
+  var result_block =  document.createElement("div");
+  result_block.setAttribute("class", "result_block");
+
+  result_area.appendChild(result_block);
+
+  // ラジオボタン
+  var radioButton = document.createElement("input");
+  radioButton.setAttribute("type", "radio");
+  radioButton.setAttribute("name", "q1");
+  radioButton.setAttribute("value", n);
+  var label = document.createElement("label");
   label.innerHTML = " "+ n + " ";
-  const div = document.getElementById("radioBtns");
-  div.appendChild(input);
-  div.appendChild(label);
+  result_block.appendChild(radioButton);
+  result_block.appendChild(label);
   var radio_btns = document.querySelectorAll(`input[type='radio'][name='q1']`);
   radio_btns.forEach( (r) => {
     r.addEventListener("change", (e) => {
@@ -265,36 +273,36 @@ function addRect(){
     });
   });
 
-  const div_RecCanvases = document.getElementById("RecCanvases");
+  // 切り抜き後のキャンバス
+  var div_RecCanvases = document.getElementById("RecCanvases");
   const canvas = document.createElement("canvas");
   canvas.setAttribute("id", "RecCanvas_"+ n);
-  div_RecCanvases.appendChild(canvas);
+  result_block.appendChild(canvas);
+  //result_block.appendChild(div_RecCanvases);
 
-  const div2 = document.getElementById("res");
-  const select = document.createElement("select");
+  var select = document.createElement("select");
   select.setAttribute("name", "lang_" + n);
   select.setAttribute("id", "selectLang_" + n);
-  const option1 = document.createElement("option");
+  var option1 = document.createElement("option");
   option1.setAttribute("value", "jpn");
   option1.textContent = "jpn";
   select.appendChild(option1);
-  const option2 = document.createElement("option");
+  var option2 = document.createElement("option");
   option2.setAttribute("value", "eng");
   option2.textContent = "eng";
   select.appendChild(option2);
-  div2.appendChild(select);
+  result_block.appendChild(select);
 
-  const p1 = document.createElement("p");
+  var p1 = document.createElement("p");
   p1.setAttribute("id", "progress_" + n);
-  div2.appendChild(p1);
-  const p2 = document.createElement("p");
+  result_block.appendChild(p1);
+  var p2 = document.createElement("p");
   p2.setAttribute("id", "result_" + n);
-  div2.appendChild(p2);
+  result_block.appendChild(p2);
 
   document.getElementById('selectLang_'+ n).onchange = function(){
     rectObj[n].lang = this.value;
   };
-
   rectObj.push({
     sx: 0,
     sy: 0,
@@ -304,4 +312,6 @@ function addRect(){
     ctx: document.getElementById("RecCanvas_"+ n).getContext("2d"),
     lang: 'jpn'
   });
+
+  count++;
 }
