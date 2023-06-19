@@ -262,6 +262,7 @@ function addRect(){
   radioButton.setAttribute("type", "radio");
   radioButton.setAttribute("name", "q1");
   radioButton.setAttribute("value", n);
+  radioButton.checked = true;
   var label = document.createElement("label");
   label.innerHTML = " "+ n + " ";
   result_block.appendChild(radioButton);
