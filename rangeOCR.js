@@ -268,6 +268,9 @@ function addRect(){
   result_block.appendChild(radioButton);
   result_block.appendChild(label);
   var radio_btns = document.querySelectorAll(`input[type='radio'][name='q1']`);
+
+  rect_num = n;
+
   radio_btns.forEach( (r) => {
     r.addEventListener("change", (e) => {
         rect_num = Number(e.target.value);
