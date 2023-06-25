@@ -248,7 +248,6 @@ function getExt(filename) {
 
 function addRect(){
 
-  //var n = rectObj.length;
   var n = count;
 
   var result_area = document.getElementById("result_area");
@@ -282,7 +281,6 @@ function addRect(){
   const canvas = document.createElement("canvas");
   canvas.setAttribute("id", "RecCanvas_"+ n);
   result_block.appendChild(canvas);
-  //result_block.appendChild(div_RecCanvases);
 
   var select = document.createElement("select");
   select.setAttribute("name", "lang_" + n);
